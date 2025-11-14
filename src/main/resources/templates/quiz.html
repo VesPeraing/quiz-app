@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>闯关答题</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
+        h1 { color: #333; }
+        .answer-input { width: 100%; padding: 10px; margin-top: 10px; box-sizing: border-box; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; margin-top: 20px; }
+        .error { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div th:if="${session.quizFailed != null}">
+    <h1>很遗憾，答错了！</h1>
+    <p class="error">你的答案是: <span th:text="${session.userWrongAnswer}"></span></p>
+    <p>正确答案是: <span th:text="${question.correctAnswer}"></span></p>
+    <form action="/quiz" method="post">
+        <input type="hidden" name="action" value="restart">
+        <button type="submit">重新挑战</button>
+    </form>
+</div>
+
+<div th:unless="${session.quizFailed != null}">
+    <h1>第 <span th:text="${currentIndex + 1}"></span> 题 / 共 <span th:text="${totalQuestions}"></span> 题</h1>
+    <p th:text="${question.text}"></p>
+
+    <form action="/submit" method="post">
+        <!-- 核心变化：使用文本输入框 -->
+        <input type="text" name="answer" class="answer-input" placeholder="请输入你的答案" required>
+        <button type="submit">提交答案</button>
+    </form>
+</div>
+
+</body>
+</html>
